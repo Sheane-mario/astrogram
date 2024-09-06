@@ -8,6 +8,7 @@ import { createTheme } from '@mui/material/styles';
 import { themeSettings } from 'theme';
 import HomePage from 'scenes/homePage';
 import LandingPage from 'scenes/landingPage';
+import ProfilePage from 'scenes/profilePage';
 
 const App = () => {
   const mode = useSelector((state) => state.mode);
@@ -23,6 +24,7 @@ const App = () => {
             <Route path='/*' element={<LandingPage />} />
             <Route path='/user-auth' element={<LoginPage />} />
             <Route path='/home' element={isAuth ? <HomePage /> : <Navigate to='/' />} />
+            <Route path='/profile/:userId' element={isAuth ? <ProfilePage /> : <Navigate to='/' />}></Route>
           </Routes>
         </ThemeProvider>
       </BrowserRouter>
