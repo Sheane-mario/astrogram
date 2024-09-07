@@ -134,6 +134,17 @@ export const users = [
   },
 ];
 
+const commentIds = [
+  new mongoose.Types.ObjectId(),
+  new mongoose.Types.ObjectId(),
+  new mongoose.Types.ObjectId(),
+  new mongoose.Types.ObjectId(),
+  new mongoose.Types.ObjectId(),
+  new mongoose.Types.ObjectId(),
+  new mongoose.Types.ObjectId(),
+  new mongoose.Types.ObjectId(),
+];
+
 export const posts = [
   {
     _id: new mongoose.Types.ObjectId(),
@@ -144,16 +155,16 @@ export const posts = [
     description: "Some really long random description",
     picturePath: "post1.jpg",
     userPicturePath: "p3.jpeg",
-    likes: new Map([
-      [userIds[0], true],
-      [userIds[2], true],
-      [userIds[3], true],
-      [userIds[4], true],
-    ]),
+    reactions: [
+      { userId: userIds[0], type: 'like' },
+      { userId: userIds[2], type: 'rocket' },
+      { userId: userIds[3], type: 'globe' },
+      { userId: userIds[4], type: 'star' },
+    ],
     comments: [
-      "random comment",
-      "another random comment",
-      "yet another random comment",
+      commentIds[0],
+      commentIds[1],
+      commentIds[2],
     ],
   },
   {
@@ -166,17 +177,17 @@ export const posts = [
       "Another really long random description. This one is longer than the previous one.",
     picturePath: "post2.jpg",
     userPicturePath: "p6.jpeg",
-    likes: new Map([
-      [userIds[7], true],
-      [userIds[4], true],
-      [userIds[1], true],
-      [userIds[2], true],
-    ]),
+    reactions: [
+      { userId: userIds[7], type: 'like' },
+      { userId: userIds[4], type: 'rocket' },
+      { userId: userIds[1], type: 'globe' },
+      { userId: userIds[2], type: 'star' },
+    ],
     comments: [
-      "one more random comment",
-      "and another random comment",
-      "no more random comments",
-      "I lied, one more random comment",
+      commentIds[3],
+      commentIds[4],
+      commentIds[5],
+      commentIds[6],
     ],
   },
   {
@@ -189,18 +200,18 @@ export const posts = [
       "This is the last really long random description. This one is longer than the previous one.",
     picturePath: "post3.jpg",
     userPicturePath: "p5.jpeg",
-    likes: new Map([
-      [userIds[1], true],
-      [userIds[6], true],
-      [userIds[3], true],
-      [userIds[5], true],
-    ]),
+    reactions: [
+      { userId: userIds[1], type: 'like' },
+      { userId: userIds[6], type: 'globe' },
+      { userId: userIds[3], type: 'rocket' },
+      { userId: userIds[5], type: 'star' },
+    ],
     comments: [
-      "one more random comment",
-      "I lied, one more random comment",
-      "I lied again, one more random comment",
-      "Why am I doing this?",
-      "I'm bored",
+      commentIds[7],
+      commentIds[0],
+      commentIds[1],
+      commentIds[2],
+      commentIds[3],
     ],
   },
   {
@@ -213,18 +224,18 @@ export const posts = [
       "This is the last really long random description. This one is longer than the previous one. Man I'm bored. I'm going to keep typing until I run out of things to say.",
     picturePath: "post4.jpg",
     userPicturePath: "p7.jpeg",
-    likes: new Map([
-      [userIds[1], true],
-      [userIds[6], true],
-      [userIds[3], true],
-    ]),
+    reactions: [
+      { userId: userIds[1], type: 'globe' },
+      { userId: userIds[6], type: 'star' },
+      { userId: userIds[3], type: 'rocket' },
+    ],
     comments: [
-      "I lied again, one more random comment",
-      "Why am I doing this?",
-      "I'm bored",
-      "I'm still bored",
-      "All I want to do is play video games",
-      "I'm going to play video games",
+      commentIds[4],
+      commentIds[5],
+      commentIds[6],
+      commentIds[7],
+      commentIds[0],
+      commentIds[1],
     ],
   },
   {
@@ -237,18 +248,18 @@ export const posts = [
       "Just a short description. I'm tired of typing. I'm going to play video games now.",
     picturePath: "post5.jpg",
     userPicturePath: "p8.jpeg",
-    likes: new Map([
-      [userIds[1], true],
-      [userIds[3], true],
-      [userIds[5], true],
-      [userIds[7], true],
-    ]),
+    reactions: [
+      { userId: userIds[1], type: 'rocket' },
+      { userId: userIds[3], type: 'star' },
+      { userId: userIds[5], type: 'globe' },
+      { userId: userIds[7], type: 'like' },
+    ],
     comments: [
-      "I lied again, one more random comment",
-      "Why am I doing this?",
-      "Man I'm bored",
-      "What should I do?",
-      "I'm going to play video games",
+      commentIds[2],
+      commentIds[3],
+      commentIds[4],
+      commentIds[5],
+      commentIds[6],
     ],
   },
   {
@@ -261,17 +272,27 @@ export const posts = [
       "For the last time, I'm going to play video games now. I'm tired of typing. I'm going to play video games now.",
     picturePath: "post6.jpg",
     userPicturePath: "p9.jpeg",
-    likes: new Map([
-      [userIds[1], true],
-      [userIds[2], true],
-    ]),
-
+    reactions: [
+      { userId: userIds[1], type: 'like' },
+      { userId: userIds[2], type: 'globe' },
+    ],
     comments: [
-      "Can I play video games now?",
-      "No let's actually study",
-      "Never mind, I'm going to play video games",
-      "Stop it.",
-      "Michael, stop it.",
+      commentIds[0],
+      commentIds[1],
+      commentIds[2],
+      commentIds[3],
+      commentIds[4],
     ],
   },
+];
+
+export const comments = [
+  { _id: commentIds[0], userId: userIds[0], postId: posts[0]._id, text: "Great post!" },
+  { _id: commentIds[1], userId: userIds[1], postId: posts[0]._id, text: "Interesting content!" },
+  { _id: commentIds[2], userId: userIds[2], postId: posts[0]._id, text: "Thanks for sharing!" },
+  { _id: commentIds[3], userId: userIds[3], postId: posts[1]._id, text: "Nice photo!" },
+  { _id: commentIds[4], userId: userIds[4], postId: posts[1]._id, text: "Well written!" },
+  { _id: commentIds[5], userId: userIds[5], postId: posts[1]._id, text: "This is hilarious!" },
+  { _id: commentIds[6], userId: userIds[6], postId: posts[2]._id, text: "I love this!" },
+  { _id: commentIds[7], userId: userIds[7], postId: posts[2]._id, text: "Very insightful!" },
 ];

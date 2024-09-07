@@ -1,5 +1,18 @@
 import mongoose from "mongoose";
 
+const reactionSchema = mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  type: {
+    type: String,
+    enum: ['like', 'globe', 'rocket', 'star'], // Enum ensures only specified values are allowed
+    required: true
+  }
+}, { _id: false });
+
 const postSchema = mongoose.Schema(
   {
     userId: {
@@ -18,10 +31,7 @@ const postSchema = mongoose.Schema(
     description: String,
     picturePath: String,
     userPicturePath: String,
-    likes: {
-      type: Map,
-      of: Boolean,
-    },
+    reactions: [reactionSchema],
     comments: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Comment'
