@@ -11,6 +11,7 @@ import { fileURLToPath } from 'url';
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/users.js';
 import postRoutes from './routes/posts.js';
+import searchRoutes from './routes/search.js';
 import { register } from './controllers/auth.js';
 import User from './models/User.js';
 import Post from './models/Post.js';
@@ -48,7 +49,7 @@ app.post('/auth/register', upload.single('picture'), register);
 app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
 app.use("/posts", postRoutes);
-
+app.use("/search", searchRoutes);
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 6001;
 mongoose
