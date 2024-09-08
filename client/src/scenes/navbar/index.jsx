@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { Box, IconButton, InputBase, Typography, Select, MenuItem, FormControl, useTheme, useMediaQuery } from "@mui/material";
 import { Search, Message, DarkMode, LightMode, Help, Menu, Close } from "@mui/icons-material";
 import { Notifications } from "@mui/icons-material";
+import { Event as EventIcon } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "state";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
+import SearchBar from "components/SearchBar";
 
 const Navbar = () => {
     const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -42,12 +44,13 @@ const Navbar = () => {
                     Astrogram
                 </Typography>
                 {isNonMobileScreens && (
-                    <FlexBetween backgroundColor={neutralLight} borderRadius='9px' gap='3rem' padding='0.1rem 1.5rem'>
-                        <InputBase placeholder="Search..."/>
-                        <IconButton>
-                            <Search />
-                        </IconButton>
-                    </FlexBetween>
+                    // <FlexBetween backgroundColor={neutralLight} borderRadius='9px' gap='3rem' padding='0.1rem 1.5rem'>
+                    //     <InputBase placeholder="Search..."/>
+                    //     <IconButton>
+                    //         <Search />
+                    //     </IconButton>
+                    // </FlexBetween>
+                    <SearchBar />
                 )}
             </FlexBetween>
 
@@ -60,6 +63,9 @@ const Navbar = () => {
                     <Message sx={{ fontSize: '25px' }}/>
                     <Notifications sx={{ fontSize: '25px' }}/>
                     <Help sx={{ fontSize: '25px' }}/>
+                    <IconButton onClick={() => navigate("/events")}>
+                        <EventIcon sx={{ fontSize: '25px' }}/>
+                    </IconButton>
                     <FormControl variant="standard" value={fullName} >
                         <Select value={fullName}
                             sx={{
@@ -116,6 +122,9 @@ const Navbar = () => {
                         <Message sx={{ fontSize: '25px' }}/>
                         <Notifications sx={{ fontSize: '25px' }}/>
                         <Help sx={{ fontSize: '25px' }}/>
+                        <IconButton onClick={() => navigate("/events")}>
+                            <EventIcon sx={{ fontSize: '25px' }}/>
+                        </IconButton>
                         <FormControl variant="standard" value={fullName} >
                             <Select value={fullName}
                                 sx={{
