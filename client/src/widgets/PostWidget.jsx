@@ -1,3 +1,5 @@
+// client/src/widgets/PostWidget.jsx
+
 import React from 'react';
 import {
     ChatBubbleOutlineOutlined,

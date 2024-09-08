@@ -1,3 +1,5 @@
+// client/src/scenes/landingPage/About.jsx
+
 import React from "react";
 import { Box, Typography, useTheme, useMediaQuery, Grid, Avatar } from "@mui/material";
 import { Search, Group, Brush, Chat, Favorite, Explore, EmojiObjects, Stars } from "@mui/icons-material";

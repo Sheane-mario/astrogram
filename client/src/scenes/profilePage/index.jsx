@@ -1,3 +1,5 @@
+// client/src/scenes/profilePage/index.jsx
+
 import { Box, useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";

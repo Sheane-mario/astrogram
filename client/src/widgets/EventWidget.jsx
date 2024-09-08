@@ -1,3 +1,5 @@
+// client/src/widgets/EventWidget.jsx
+
 import React from "react";
 import { Box, Typography, Button, useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";

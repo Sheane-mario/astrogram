@@ -1,3 +1,5 @@
+// server/routes/posts.js
+
 import express from "express";
 import { createPost, getFeedPosts, getUserPosts, addOrUpdateReaction, getAllReactions, deleteReaction , addComment, getComments,deleteComment, editComment } from "../controllers/posts.js";
 import { verifyToken } from "../middleware/auth.js";
@@ -5,7 +7,8 @@ import { verifyToken } from "../middleware/auth.js";
 const router = express.Router();
 
 /* CREATE */
-//router.post('/', verifyToken, createPost);
+router.post('/', verifyToken, createPost);
+
 /* READ */
 router.get("/", verifyToken, getFeedPosts);
 router.get("/:userId/posts", verifyToken, getUserPosts);

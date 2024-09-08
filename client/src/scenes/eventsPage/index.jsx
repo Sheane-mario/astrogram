@@ -1,3 +1,5 @@
+// client/src/scenes/eventsPage/index.jsx
+
 import React, { useEffect, useState } from "react";
 import { Box, Button, useMediaQuery, useTheme } from "@mui/material";
 import { useSelector } from "react-redux";

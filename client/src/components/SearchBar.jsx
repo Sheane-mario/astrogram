@@ -1,3 +1,5 @@
+// client/src/components/SearchBar.jsx
+
 import React, { useState } from 'react';
 import { InputBase, IconButton, Paper, Popper, Typography, Box } from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';

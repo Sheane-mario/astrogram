@@ -1,3 +1,5 @@
+// server/routes/users.js
+
 import express from 'express';
 import { followUnfollowUser, getUser, getUserFollowers, getUserFollowing, unfollowUser, removeFollower } from '../controllers/users.js';
 import { verifyToken } from '../middleware/auth.js'

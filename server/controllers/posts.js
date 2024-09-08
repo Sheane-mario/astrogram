@@ -1,3 +1,5 @@
+// server/controllers/posts.js
+
 import Post from "../models/Post.js";
 import User from "../models/User.js";
 import Comment from "../models/Comment.js";
@@ -6,23 +8,29 @@ import Comment from "../models/Comment.js";
 export const createPost = async (req, res) => {
   try {
     const { userId, description, picturePath } = req.body;
+
     const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
     const newPost = new Post({
       userId,
       firstName: user.firstName,
       lastName: user.lastName,
       location: user.location,
       description,
-      userPicturePath: user.picturePath,
       picturePath,
+      userPicturePath: user.picturePath,
       reactions: [],
       comments: [],
     });
+
     await newPost.save();
 
-    const post = await Post.find();
-    res.status(201).json(post);
+    const posts = await Post.find().sort({ createdAt: -1 });
+    res.status(201).json(posts);
   } catch (err) {
+    console.error("Error in createPost:", err);
     res.status(409).json({ message: err.message });
   }
 };

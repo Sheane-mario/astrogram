@@ -1,3 +1,5 @@
+// client/src/scenes/homePage/index.jsx
+
 import React from "react";
 import Navbar from "scenes/navbar";
 import { Box, useMediaQuery } from "@mui/material";
@@ -25,7 +27,7 @@ const HomePage = () => {
                 justifyContent="space-between"  
             >
                 <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
-                    <UserWidget userId={_id} picturePath={user.picturePath} />
+                    <UserWidget userId={_id} picturePath={picturePath} />
                 </Box>
                 <Box
                     flexBasis={isNonMobileScreens ? "42%" : undefined}

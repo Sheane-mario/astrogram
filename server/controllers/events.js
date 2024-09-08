@@ -1,3 +1,5 @@
+// server/controllers/events.js
+
 import Event from "../models/Event.js";
 import User from "../models/User.js";
 

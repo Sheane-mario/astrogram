@@ -1,3 +1,5 @@
+// client/src/widgets/UserWidget.jsx
+
 import {
   ManageAccountsOutlined,
   EditOutlined,
