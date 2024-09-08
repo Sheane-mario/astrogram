@@ -15,7 +15,7 @@ export const createPost = async (req, res) => {
       description,
       userPicturePath: user.picturePath,
       picturePath,
-      likes: {},
+      reactions: [],
       comments: [],
     });
     await newPost.save();
@@ -54,23 +54,85 @@ export const getUserPosts = async (req, res) => {
   }
 };
 
-/* UPDATE */
-export const likePost = async (req, res) => {
+// Reactions Functions
+// ADD/UPDATE REACTION
+export const addOrUpdateReaction = async (req, res) => {
   try {
     const { id } = req.params;
-    const { userId } = req.body;
-    const post = await Post.findById(id);
-    const isLiked = post.likes.get(userId);
+    const { userId, type } = req.body;
+    
+    const validTypes = ['like', 'globe', 'rocket', 'star'];
+    if (!validTypes.includes(type)) {
+      return res.status(400).json({ message: "Invalid reaction type" });
+    }
 
-    if (isLiked) {
-      post.likes.delete(userId);
+    const post = await Post.findById(id);
+    const existingReaction = post.reactions.find(reaction => reaction.userId.toString() === userId);
+    
+    if (existingReaction) {
+      existingReaction.type = type;
     } else {
-      post.likes.set(userId, true);
+      post.reactions.push({ userId, type });
     }
 
     const updatedPost = await Post.findByIdAndUpdate(
       id,
-      { likes: post.likes },
+      { reactions: post.reactions },
+      { new: true }
+    );
+
+    res.status(200).json(updatedPost);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
+// GET ALL REACTIONS 
+export const getAllReactions = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const post = await Post.findById(id)
+      .populate({
+        path: 'reactions.userId', // Ensure this matches your schema
+        select: 'firstName picturePath' // Ensure these fields exist in the User model
+      });
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    const reactions = post.reactions.map(reaction => ({
+      username: reaction.userId?.firstName || 'Unknown', // Handle cases where userId might be null
+      picturePath: reaction.userId?.picturePath || '', // Handle cases where picturePath might be null
+      type: reaction.type,
+    }));
+
+    res.status(200).json(reactions);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
+
+
+// DELETE REACTION 
+export const deleteReaction = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { userId } = req.body;
+
+    const post = await Post.findById(id);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    post.reactions = post.reactions.filter(reaction => reaction.userId.toString() !== userId);
+
+    const updatedPost = await Post.findByIdAndUpdate(
+      id,
+      { reactions: post.reactions },
       { new: true }
     );
 
