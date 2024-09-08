@@ -44,9 +44,9 @@ import {
     const loggedInUserId = useSelector((state) => state.user._id);
 
     const [isReactionsVisible, setIsReactionsVisible] = useState(false);
-    const userReaction = reactions.find(reaction => reaction.userId === loggedInUserId);
+    const userReaction = Array.isArray(reactions) ? reactions.find(reaction => reaction.userId === loggedInUserId) : null;
     const selectedReactionType = userReaction ? userReaction.type : null;
-    const reactionCount = reactions.length;
+    const reactionCount = Array.isArray(reactions) ? reactions.length : 0;
     const [anchorEl, setAnchorEl] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [reactionUsers, setReactionUsers] = useState([]);
