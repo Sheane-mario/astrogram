@@ -12,11 +12,13 @@ import authRoutes from './routes/auth.js';
 import userRoutes from './routes/users.js';
 import postRoutes from './routes/posts.js';
 import searchRoutes from './routes/search.js';
+import eventRoutes from './routes/events.js';
 import { register } from './controllers/auth.js';
 import User from './models/User.js';
 import Post from './models/Post.js';
 import Comment from './models/Comment.js'
-import { users, posts, comments } from './data/index.js';
+import Event from './models/Event.js';
+import { users, posts, comments, events } from './data/index.js';
 
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url);
@@ -51,6 +53,8 @@ app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
 app.use("/posts", postRoutes);
 app.use("/search", searchRoutes);
+app.use("/events", eventRoutes);
+
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 6001;
 mongoose
@@ -64,5 +68,6 @@ mongoose
         // User.insertMany(users);
         // Post.insertMany(posts);
         // Comment.insertMany(comments)
+        // Event.insertMany(events);
     })
     .catch((err) => console.log(`${err} did not connect !`));   

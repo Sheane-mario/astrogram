@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Box, IconButton, InputBase, Typography, Select, MenuItem, FormControl, useTheme, useMediaQuery } from "@mui/material";
 import { Search, Message, DarkMode, LightMode, Help, Menu, Close } from "@mui/icons-material";
+import { Event as EventIcon } from "@mui/icons-material";
 import { Notifications } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "state";
@@ -61,6 +62,9 @@ const Navbar = () => {
                     </IconButton>
                     <Message sx={{ fontSize: '25px' }}/>
                     <Notifications sx={{ fontSize: '25px' }}/>
+                    <IconButton onClick={() => navigate("/events")}>
+                        <EventIcon sx={{ fontSize: '25px' }}/>
+                    </IconButton>
                     <Help sx={{ fontSize: '25px' }}/>
                     <FormControl variant="standard" value={fullName} >
                         <Select value={fullName}
@@ -117,6 +121,9 @@ const Navbar = () => {
                         </IconButton>
                         <Message sx={{ fontSize: '25px' }}/>
                         <Notifications sx={{ fontSize: '25px' }}/>
+                        <IconButton onClick={() => navigate("/events")}>
+                            <EventIcon sx={{ fontSize: '25px' }}/>
+                        </IconButton>
                         <Help sx={{ fontSize: '25px' }}/>
                         <FormControl variant="standard" value={fullName} >
                             <Select value={fullName}

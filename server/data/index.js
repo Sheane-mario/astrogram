@@ -296,3 +296,57 @@ export const comments = [
   { _id: commentIds[6], userId: userIds[6], postId: posts[2]._id, text: "I love this!" },
   { _id: commentIds[7], userId: userIds[7], postId: posts[2]._id, text: "Very insightful!" },
 ];
+
+
+export const events = [
+  {
+    _id: new mongoose.Types.ObjectId(),
+    creatorId: userIds[0],
+    title: "Mars Colony Simulation Workshop",
+    description: "Join us for an immersive workshop where we simulate life in a Mars colony. Learn about the challenges of space habitation and brainstorm innovative solutions.",
+    date: new Date("2024-10-15T14:00:00Z"),
+    location: "Virtual Event",
+    attendees: [userIds[1], userIds[2], userIds[3]],
+    imageUrl: "event1.jpg",
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    creatorId: userIds[1],
+    title: "Astrophotography Nightout",
+    description: "Grab your cameras and join fellow space enthusiasts for a night of astrophotography. We'll be capturing celestial objects and learning techniques to improve our space photography skills.",
+    date: new Date("2024-09-22T20:00:00Z"),
+    location: "UCSC, Colombo",
+    attendees: [userIds[0], userIds[4], userIds[5]],
+    imageUrl: "event2.jpg",
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    creatorId: userIds[2],
+    title: "SpaceX Starship Launch Viewing Party",
+    description: "Come watch the historic SpaceX Starship launch with fellow space enthusiasts. We'll have expert commentary and a Q&A session after the launch.",
+    date: new Date("2024-11-30T10:00:00Z"),
+    location: "ACCIMT, Moratuwa",
+    attendees: [userIds[1], userIds[3], userIds[5], userIds[6]],
+    imageUrl: "event3.jpg",
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    creatorId: userIds[3],
+    title: "Exoplanet Discovery Symposium",
+    description: "A day-long symposium featuring talks from leading astronomers about recent exoplanet discoveries and the search for habitable worlds beyond our solar system.",
+    date: new Date("2025-02-18T09:00:00Z"),
+    location: "University of Peradeniya, Peradeniya",
+    attendees: [userIds[0], userIds[2], userIds[4], userIds[7]],
+    imageUrl: "event4.jpg",
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    creatorId: userIds[4],
+    title: "Space Debris Cleanup Hackathon",
+    description: "Participate in our 48-hour hackathon to develop innovative solutions for cleaning up space debris. Cash prizes for the top three teams!",
+    date: new Date("2024-12-05T18:00:00Z"),
+    location: "Virtual Event",
+    attendees: [userIds[1], userIds[5], userIds[6], userIds[7]],
+    imageUrl: "event5.jpg",
+  },
+];
