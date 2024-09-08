@@ -1,17 +1,28 @@
+import React from 'react';
 import {
     ChatBubbleOutlineOutlined,
     FavoriteBorderOutlined,
-    FavoriteOutlined,
+    RocketOutlined,
+    PublicOutlined,
+    StarBorderOutlined,
     ShareOutlined,
     DeleteOutlined,
     EditOutlined,  
   } from "@mui/icons-material";
-  import { Box, Divider, IconButton, Typography, useTheme, TextField, Button } from "@mui/material";
+  import { Box, Divider, IconButton, Typography, useTheme, Tooltip, Popover, TextField, Button, Avatar, CircularProgress } from "@mui/material";
   import FlexBetween from "components/FlexBetween";
   import WidgetWrapper from "components/WidgetWrapper";
   import { useState } from "react";
   import { useDispatch, useSelector } from "react-redux";
   import { setPost } from "state";
+  import { motion } from "framer-motion";
+
+  const reactionIcons = {
+    like: FavoriteBorderOutlined,
+    globe: PublicOutlined,
+    star: StarBorderOutlined,
+    rocket: RocketOutlined,
+  };
   
   const PostWidget = ({
     postId,
@@ -21,7 +32,7 @@ import {
     location,
     picturePath,
     userPicturePath,
-    likes,
+    reactions,
     comments,
   }) => {
     const [isComments, setIsComments] = useState(false);
@@ -31,24 +42,84 @@ import {
     const dispatch = useDispatch();
     const token = useSelector((state) => state.token);
     const loggedInUserId = useSelector((state) => state.user._id);
-    const isLiked = Boolean(likes[loggedInUserId]);
-    const likeCount = Object.keys(likes).length;
-  
+
+    const [isReactionsVisible, setIsReactionsVisible] = useState(false);
+    const userReaction = reactions.find(reaction => reaction.userId === loggedInUserId);
+    const selectedReactionType = userReaction ? userReaction.type : null;
+    const reactionCount = reactions.length;
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [reactionUsers, setReactionUsers] = useState([]);
+
+
     const { palette } = useTheme();
     const main = palette.neutral.main;
     const primary = palette.primary.main;
-    console.log(loggedInUserId);
-    const patchLike = async () => {
-      const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+
+    const list = {
+      visible: {
+        opacity: 1,
+        transition: {
+          when: "afterChildren",
+          staggerChildren: 0.2,
         },
-        body: JSON.stringify({ userId: loggedInUserId }),
-      });
-      const updatedPost = await response.json();
-      dispatch(setPost({ post: updatedPost }));
+      },
+      hidden: {
+        opacity: 0,
+        transition: {
+          when: "beforeChildren",
+        },
+        scale: 0.6,
+      },
+    };
+
+    //Handle get reactins
+    const fetchReactionUsers = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(`http://localhost:3001/posts/${postId}/reactions`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) throw new Error("Failed to fetch reaction users");
+        const data = await response.json();
+        setReactionUsers(data);
+      } catch (error) {
+        console.error("Error fetching reaction users:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    // Handle Reactions add/update/delete
+    const handleReaction = async (reactionType) => {
+      try {
+        const isRemoving = selectedReactionType === reactionType;
+        const method = isRemoving ? "DELETE" : "PATCH";
+    
+        const response = await fetch(`http://localhost:3001/posts/${postId}/reaction`, {
+          method,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: loggedInUserId,
+            type: reactionType,
+          }),
+        });
+    
+        if (!response.ok) throw new Error("Failed to update reaction");
+        const updatedPost = await response.json();
+        dispatch(setPost({ post: updatedPost }));
+    
+        // Update state to reflect reaction removal or update
+        setIsReactionsVisible(false);
+      } catch (error) {
+        console.error("Error updating reaction:", error);
+      }
     };
 
     //handleAddComment
@@ -78,6 +149,18 @@ import {
         // You might want to show an error message to the user here
       }
     }
+
+    const handleReactionClick = async (event) => {
+      setAnchorEl(event.currentTarget);
+      await fetchReactionUsers();
+    };
+  
+    const handleClose = () => {
+      setAnchorEl(null);
+    };
+
+    const open = Boolean(anchorEl);
+    const id = open ? 'reaction-popover' : undefined;
 
     //handleDeleteComment
     const handleDeleteComment = async (commentId) => {
@@ -143,17 +226,94 @@ import {
           />
         )}
         <FlexBetween mt="0.25rem">
-          <FlexBetween gap="1rem">
-            <FlexBetween gap="0.3rem">
-              <IconButton onClick={patchLike}>
-                {isLiked ? (
-                  <FavoriteOutlined sx={{ color: primary }} />
+        <FlexBetween gap="1rem">
+          <div
+            onMouseEnter={() => setIsReactionsVisible(true)}
+            onMouseLeave={() => setIsReactionsVisible(false)}
+            style={{ position: 'relative' }}
+          >
+            <Tooltip title="React">
+              <IconButton>
+                {selectedReactionType ? (
+                  React.createElement(reactionIcons[selectedReactionType], { sx: { color: primary, fontSize: '24px' } })
                 ) : (
-                  <FavoriteBorderOutlined />
+                  <FavoriteBorderOutlined sx={{ color: main, fontSize: '24px' }} />
                 )}
               </IconButton>
-              <Typography>{likeCount}</Typography>
-            </FlexBetween>
+            </Tooltip>
+
+            {isReactionsVisible && (
+              <motion.div
+                className="reactionsHolder"
+                variants={list}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                style={{
+                  display: 'flex',
+                  gap: '1rem', // Increased gap for more spacing
+                  position: 'absolute',
+                  bottom: '20px', // Adjusted to position the box lower
+                  left: '-120%',
+                  transform: 'translateX(-50%)',
+                  backgroundColor: palette.background.alt,
+                  padding: '1rem', // Increased padding
+                  borderRadius: '16px', // More rounded corners
+                  boxShadow: '0px 4px 12px rgba(0,0,0,0.1)',
+                }}
+              >
+                {Object.entries(reactionIcons).map(([reactionType, Icon]) => (
+                  <motion.div
+                    key={reactionType}
+                    whileHover={{ scale: 1.2 }}
+                    onClick={() => handleReaction(reactionType)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <Icon sx={{ fontSize: '40px', color: selectedReactionType === reactionType ? primary : main }} />
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
+          </div>
+          <Typography onClick={handleReactionClick} style={{ cursor: 'pointer' }}>{reactionCount}</Typography>
+          <Popover
+              id={id}
+              open={open}
+              anchorEl={anchorEl}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+              PaperProps={{
+                style: {
+                  maxHeight: 300,
+                  overflowY: 'auto',
+                  minWidth: 300, // Increased minWidth
+                  borderRadius: '16px', // More rounded corners
+                },
+              }}
+            >
+              <Box p={2}>
+                {isLoading ? (
+                  <Box display="flex" justifyContent="center" alignItems="center" height={100}>
+                    <CircularProgress />
+                  </Box>
+                ) : (
+                  reactionUsers.map((user, index) => {
+                    if (!user) return null; // Skip if user is null
+                    return (
+                      <Box key={index} display="flex" alignItems="center" mb={1}>
+                        <Avatar src={user.picturePath ? `http://localhost:3001/assets/${user.picturePath}` : ''} sx={{ width: 32, height: 32, mr: 1 }} />
+                        <Typography variant="body2" sx={{ flexGrow: 1, mr: 2 }}>{user.username || 'Unknown'}</Typography>
+                        {React.createElement(reactionIcons[user.type] || FavoriteBorderOutlined, { sx: { fontSize: 24, color: main } })}
+                      </Box>
+                    );
+                  })
+                )}
+              </Box>
+            </Popover>
+
   
             <FlexBetween gap="0.3rem">
             <IconButton onClick={() => setIsComments(!isComments)}>
