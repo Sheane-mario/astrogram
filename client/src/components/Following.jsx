@@ -21,20 +21,21 @@ const Following = ({ followingPersonId, name, subtitle, userPicturePath }) => {
   
     const isFollowing = followings.find((followingPerson) => followingPerson._id === followingPersonId);
   
-    const patchFollowingPerson = async () => {
-      const response = await fetch(
-        `http://localhost:3001/users/${_id}/${followingPersonId}`,
-        {
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const data = await response.json();
-      dispatch(setFollowing({ following: data }));
-    };
+    const unfollowUser = async (Id, FollowingPersonId) => {
+       const response = await fetch(
+         `http://localhost:3001/users/${Id}/${FollowingPersonId}/unfollow`,
+         {
+           method: "PATCH",
+           headers: {
+             Authorization: `Bearer ${token}`,
+             "Content-Type": "application/json",
+           },
+         }
+       );
+       const data = await response.json();
+       dispatch(setFollowing({ following: data }));
+    }
+
   
     return (
       <FlexBetween>
@@ -65,7 +66,7 @@ const Following = ({ followingPersonId, name, subtitle, userPicturePath }) => {
           </Box>
         </FlexBetween>
         <IconButton
-          onClick={() => patchFollowingPerson()}
+          onClick={() => unfollowUser(_id, followingPersonId)}
           sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
         >
           {isFollowing ? (

@@ -21,11 +21,11 @@ const Follower = ({ followerId, name, subtitle, userPicturePath }) => {
   
     const isFollower = followers.find((follower) => follower._id === followerId);
   
-    const patchFollower = async () => {
+    const removeFollower = async (Id, FollowerId) => {
       const response = await fetch(
-        `http://localhost:3001/users/${_id}/${followerId}`,
+        `http://localhost:3001/users/${Id}/${FollowerId}/removefollower`,
         {
-          method: "PATCH",
+          method: "DELETE",
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
@@ -65,7 +65,7 @@ const Follower = ({ followerId, name, subtitle, userPicturePath }) => {
           </Box>
         </FlexBetween>
         <IconButton
-          onClick={() => patchFollower()}
+          onClick={() => removeFollower(_id, followerId)}
           sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
         >
           {isFollower ? (

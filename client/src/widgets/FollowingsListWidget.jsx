@@ -9,7 +9,7 @@ const FollowingsListWidget = ({ userId }) => {
   const dispatch = useDispatch();
   const { palette } = useTheme();
   const token = useSelector((state) => state.token);
-  const followings = useSelector((state) => state.user.following);
+  const user = useSelector((state) => state.user);
 
   const getFollowing = async () => {
     const response = await fetch(
@@ -27,6 +27,7 @@ const FollowingsListWidget = ({ userId }) => {
     getFollowing();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  //console.log(user)
   return (
     <WidgetWrapper>
       <Typography
@@ -38,7 +39,7 @@ const FollowingsListWidget = ({ userId }) => {
         Following List
       </Typography>
       <Box display="flex" flexDirection="column" gap="1.5rem">
-        {followings.map((followingPerson) => (
+        {user.following.map((followingPerson) => (
           <Following
             key={followingPerson._id}
             followingPersonId={followingPerson._id}

@@ -8,7 +8,7 @@ import { Box, Typography, Divider, useTheme, Button } from "@mui/material";
 import UserImage from "components/UserImage";
 import FlexBetween from "components/FlexBetween";
 import WidgetWrapper from "components/WidgetWrapper";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { setFollowing } from "state";
@@ -19,12 +19,20 @@ const UserWidget = ({ userId, picturePath }) => {
   const navigate = useNavigate();
   const token = useSelector((state) => state.token);
   const accOwner = useSelector((state) => state.user); // logged in user
+  const dispatch = useDispatch();
   const dark = palette.neutral.dark;
   const medium = palette.neutral.medium;
   const main = palette.neutral.main;
-  const isFollowing = accOwner.following.includes(userId); // check if logged in user is following the user
   const isAccOwnerProfile = accOwner._id === userId; // check if logged in user is viewing their own profile
-  
+
+  let isFollowing = false;
+  accOwner.following.forEach((followingPerson) => {
+    if(followingPerson._id === userId){
+      isFollowing = true;
+    }
+  });
+
+  const [followingStatus, setFollowingStatus] = useState(isFollowing);
 
   const getUser = async () => {
     const response = await fetch(`http://localhost:3001/users/${userId}`, {
@@ -41,15 +49,15 @@ const UserWidget = ({ userId, picturePath }) => {
       headers: { Authorization: `Bearer ${token}` },
     });
     const data = await response.json();
-    setFollowing(data.formattedFollowing);
-    //setUserFollowers(data.formattedFollowers);
-    //console.log(data);
-    // setUser(data);
+    //setIsFollowing((prev) => !prev);
+    setFollowingStatus((prev) => !prev);
+    dispatch(setFollowing({ following: data }));
+
   }
 
   useEffect(() => {
     getUser();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [followingStatus]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!user) {
     return null;
@@ -62,7 +70,6 @@ const UserWidget = ({ userId, picturePath }) => {
     occupation,
     followers,
   } = user;
-
 
   return (
     <WidgetWrapper>
@@ -94,9 +101,9 @@ const UserWidget = ({ userId, picturePath }) => {
                 variant="outlined"
                 color="primary"
                 sx={{ borderRadius: "1rem", mt: "0.5rem" }}
-                onClick={followUnfollowUser}
+                onClick={() => followUnfollowUser()}
               >
-               {isFollowing ? "Unfollow" : "Follow"} 
+               {followingStatus ? "Unfollow" : "Follow"} 
               </Button>
             )}
           </Box>
