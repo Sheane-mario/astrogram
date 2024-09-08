@@ -40,9 +40,16 @@ export const authSlice = createSlice({
             } else {
                 console.error('User is not logged in');
             }
+        },
+        setFollowing: (state, action) => {
+            if (state.user) {
+                state.user.following = action.payload.following;
+            } else {
+                console.error('User is not logged in');
+            }
         }
     }
 });
 
-export const { setMode, setLogin, setLogout, setPost, setPosts, setFollowers} = authSlice.actions;
+export const { setMode, setLogin, setLogout, setPost, setPosts, setFollowers, setFollowing } = authSlice.actions;
 export default authSlice.reducer;

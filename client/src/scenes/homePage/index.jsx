@@ -7,6 +7,7 @@ import MyPostWidget from "widgets/MyPostWidget";
 import PostsWidget from "widgets/PostsWidget";
 import AdvertWidget from "widgets/AdvertWidget";
 import FollowersListWidget from "widgets/FollowersListWidget";
+import FollowingsListWidget from "widgets/FollowingsListWidget";
 
 const HomePage = () => {
     const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
@@ -38,6 +39,8 @@ const HomePage = () => {
                         <AdvertWidget />
                         <Box m='2rem 0' />
                         <FollowersListWidget userId={_id} />
+                        <Box m='2rem 0' />
+                        <FollowingsListWidget userId={_id} />
                     </Box>
                 )}
             </Box>

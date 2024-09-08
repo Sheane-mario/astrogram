@@ -26,6 +26,22 @@ export const getUserFollowers = async (req, res) => {
     }
 }
 
+export const getUserFollowing = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const user = await User.findById(id);
+
+        const following = await Promise.all(
+            user.following.map((id) => User.findById(id))
+        );
+
+        res.status(200).json(following);
+
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
+
 /* UPDATE */
   export const followUnfollowUser = async (req, res) => {
     try {
@@ -47,13 +63,26 @@ export const getUserFollowers = async (req, res) => {
             user.following.map((id) => User.findById(id))
         );
 
+        const followers = await Promise.all(
+            follower.followers.map((id) => User.findById(id))
+        );
+
         const formattedFollowing = following.map(
             ({ _id, firstName, lastName, occupation, location, picturePath }) => {
                 return { _id, firstName, lastName, occupation, location, picturePath };
             }
         );
 
-        res.status(200).json(formattedFollowing);
+        const formattedFollowers = followers.map(
+            ({ _id, firstName, lastName, occupation, location, picturePath }) => {
+                return { _id, firstName, lastName, occupation, location, picturePath };
+            }
+        );
+
+        res.status(200).json({
+            formattedFollowing,
+            formattedFollowers,
+        });
 
     } catch (err) {
         res.status(404).json({ message: err.message });

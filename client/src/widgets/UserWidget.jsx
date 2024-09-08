@@ -4,22 +4,27 @@ import {
   LocationOnOutlined,
   WorkOutlineOutlined,
 } from "@mui/icons-material";
-import { Box, Typography, Divider, useTheme } from "@mui/material";
+import { Box, Typography, Divider, useTheme, Button } from "@mui/material";
 import UserImage from "components/UserImage";
 import FlexBetween from "components/FlexBetween";
 import WidgetWrapper from "components/WidgetWrapper";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { setFollowing } from "state";
 
 const UserWidget = ({ userId, picturePath }) => {
   const [user, setUser] = useState(null);
   const { palette } = useTheme();
   const navigate = useNavigate();
   const token = useSelector((state) => state.token);
+  const accOwner = useSelector((state) => state.user); // logged in user
   const dark = palette.neutral.dark;
   const medium = palette.neutral.medium;
   const main = palette.neutral.main;
+  const isFollowing = accOwner.following.includes(userId); // check if logged in user is following the user
+  const isAccOwnerProfile = accOwner._id === userId; // check if logged in user is viewing their own profile
+  
 
   const getUser = async () => {
     const response = await fetch(`http://localhost:3001/users/${userId}`, {
@@ -29,6 +34,18 @@ const UserWidget = ({ userId, picturePath }) => {
     const data = await response.json();
     setUser(data);
   };
+
+  const followUnfollowUser = async () => {
+    const response = await fetch(`http://localhost:3001/users/${accOwner._id}/${userId}`, {
+      method: "PATCH",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = await response.json();
+    setFollowing(data.formattedFollowing);
+    //setUserFollowers(data.formattedFollowers);
+    //console.log(data);
+    // setUser(data);
+  }
 
   useEffect(() => {
     getUser();
@@ -45,6 +62,7 @@ const UserWidget = ({ userId, picturePath }) => {
     occupation,
     followers,
   } = user;
+
 
   return (
     <WidgetWrapper>
@@ -71,6 +89,16 @@ const UserWidget = ({ userId, picturePath }) => {
               {firstName} {lastName}
             </Typography>
             <Typography color={medium}>{followers.length} followers</Typography>
+            {!isAccOwnerProfile && (
+              <Button
+                variant="outlined"
+                color="primary"
+                sx={{ borderRadius: "1rem", mt: "0.5rem" }}
+                onClick={followUnfollowUser}
+              >
+               {isFollowing ? "Unfollow" : "Follow"} 
+              </Button>
+            )}
           </Box>
         </FlexBetween>
         <ManageAccountsOutlined />

@@ -1,30 +1,30 @@
 import { Box, Typography, useTheme } from "@mui/material";
-import Follower from "components/Follower";
+import Following from "components/Following";
 import WidgetWrapper from "components/WidgetWrapper";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setFollowers } from "state";
+import { setFollowing } from "state";
 
-const FollowersListWidget = ({ userId }) => {
+const FollowingsListWidget = ({ userId }) => {
   const dispatch = useDispatch();
   const { palette } = useTheme();
   const token = useSelector((state) => state.token);
-  const followers = useSelector((state) => state.user.followers);
+  const followings = useSelector((state) => state.user.following);
 
-  const getFollowers = async () => {
+  const getFollowing = async () => {
     const response = await fetch(
-      `http://localhost:3001/users/${userId}/followers`,
+      `http://localhost:3001/users/${userId}/following`,
       {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       }
     );
     const data = await response.json();
-    dispatch(setFollowers({ followers: data }));
+    dispatch(setFollowing({ following: data }));
   };
 
   useEffect(() => {
-    getFollowers();
+    getFollowing();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
@@ -35,16 +35,16 @@ const FollowersListWidget = ({ userId }) => {
         fontWeight="500"
         sx={{ mb: "1.5rem" }}
       >
-        Followers List
+        Following List
       </Typography>
       <Box display="flex" flexDirection="column" gap="1.5rem">
-        {followers.map((follower) => (
-          <Follower
-            key={follower._id}
-            followerId={follower._id}
-            name={`${follower.firstName} ${follower.lastName}`}
-            subtitle={follower.occupation}
-            userPicturePath={follower.picturePath}
+        {followings.map((followingPerson) => (
+          <Following
+            key={followingPerson._id}
+            followingPersonId={followingPerson._id}
+            name={`${followingPerson.firstName} ${followingPerson.lastName}`}
+            subtitle={followingPerson.occupation}
+            userPicturePath={followingPerson.picturePath}
           />
         ))}
       </Box>
@@ -52,4 +52,4 @@ const FollowersListWidget = ({ userId }) => {
   );
 };
 
-export default FollowersListWidget;
+export default FollowingsListWidget;
