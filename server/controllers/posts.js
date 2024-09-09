@@ -118,8 +118,8 @@ export const getAllReactions = async (req, res) => {
 
     const post = await Post.findById(id)
       .populate({
-        path: 'reactions.userId', // Ensure this matches your schema
-        select: 'firstName picturePath' // Ensure these fields exist in the User model
+        path: 'reactions.userId', 
+        select: 'firstName picturePath' 
       });
 
     if (!post) {
@@ -127,8 +127,8 @@ export const getAllReactions = async (req, res) => {
     }
 
     const reactions = post.reactions.map(reaction => ({
-      username: reaction.userId?.firstName || 'Unknown', // Handle cases where userId might be null
-      picturePath: reaction.userId?.picturePath || '', // Handle cases where picturePath might be null
+      username: reaction.userId?.firstName || 'Unknown', 
+      picturePath: reaction.userId?.picturePath || '', 
       type: reaction.type,
     }));
 
@@ -192,7 +192,6 @@ export const addComment = async (req, res) => {
 
     const savedComment = await newComment.save();
 
-        // Initialize comments array if it doesn't exist
         if (!post.comments) {
           post.comments = [];
         }

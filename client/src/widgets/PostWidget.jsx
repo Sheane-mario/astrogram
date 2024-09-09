@@ -151,7 +151,6 @@ import {
         setNewComment("");
       } catch (error) {
         console.error("Error adding comment:", error.message);
-        // You might want to show an error message to the user here
       }
     }
 
@@ -278,14 +277,14 @@ import {
                 exit="hidden"
                 style={{
                   display: 'flex',
-                  gap: '1rem', // Increased gap for more spacing
+                  gap: '1rem', 
                   position: 'absolute',
-                  bottom: '20px', // Adjusted to position the box lower
+                  bottom: '20px',
                   left: '-120%',
                   transform: 'translateX(-50%)',
                   backgroundColor: palette.background.alt,
-                  padding: '1rem', // Increased padding
-                  borderRadius: '16px', // More rounded corners
+                  padding: '1rem', 
+                  borderRadius: '16px', 
                   boxShadow: '0px 4px 12px rgba(0,0,0,0.1)',
                 }}
               >
