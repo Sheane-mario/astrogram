@@ -6,6 +6,12 @@ import { verifyToken } from "../middleware/auth.js";
 
 const router = express.Router();
 
+/* logs */
+router.get("/", (req, res, next) => {
+    console.log("Attempting to get feed posts");
+    getFeedPosts(req, res, next);
+  });
+
 /* CREATE */
 router.post('/', verifyToken, createPost);
 

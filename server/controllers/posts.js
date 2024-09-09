@@ -38,15 +38,31 @@ export const createPost = async (req, res) => {
 /* READ */
 export const getFeedPosts = async (req, res) => {
   try {
-    const post = await Post.find()
-    .populate({
-      path: 'comments',
-      populate: {
-        path: 'userId',
-        select: 'firstName lastName _id'
-      }
-    });
-    res.status(200).json(post);
+    console.log("getFeedPosts called");
+    const userId = req.user.id;
+    console.log("User ID from token:", userId);
+
+    const user = await User.findById(userId);
+    if (!user) {
+      console.log("User not found for ID:", userId);
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const following = user.following;
+    following.push(userId); // Include user's own posts
+
+    const posts = await Post.find({ userId: { $in: following } })
+      .populate({
+        path: 'comments',
+        populate: {
+          path: 'userId',
+          select: 'firstName lastName _id'
+        }
+      })
+      .sort({ createdAt: -1 });
+
+      console.log(`Fetched ${posts.length} posts for user ${userId}`);
+    res.status(200).json(posts);
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
