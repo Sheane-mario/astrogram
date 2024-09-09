@@ -33,7 +33,12 @@ app.use(helmet.crossOriginResourcePolicy( { policy: 'cross-origin' } ));
 app.use(morgan('common'));
 app.use(bodyParser.json( { limit: '30mb', extended: true } ));
 app.use(bodyParser.urlencoded( { limit: '30mb', extended: true } ));
-app.use(cors());
+
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+}));
+
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
 /* FILE STORAGE */
@@ -47,12 +52,6 @@ const storage = multer.diskStorage({
 })
 const upload = multer({ storage });
 
-/* log */
-app.use((req, res, next) => {
-    console.log(`Received ${req.method} request for ${req.url}`);
-    next();
-  });
-
 /* ROUTES WITH FILES */
 app.post('/auth/register', upload.single('picture'), register);
 app.post('/posts', verifyToken, upload.single('picture'), createPost);
@@ -60,7 +59,7 @@ app.post('/posts', verifyToken, upload.single('picture'), createPost);
 /* ROUTES */ 
 app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
-app.use("/posts", verifyToken, postRoutes);
+app.use("/posts",postRoutes);
 app.use("/search", searchRoutes);
 app.use("/events", eventRoutes);
 

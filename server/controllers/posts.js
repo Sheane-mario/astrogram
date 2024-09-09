@@ -38,13 +38,10 @@ export const createPost = async (req, res) => {
 /* READ */
 export const getFeedPosts = async (req, res) => {
   try {
-    console.log("getFeedPosts called");
     const userId = req.user.id;
-    console.log("User ID from token:", userId);
-
     const user = await User.findById(userId);
+
     if (!user) {
-      console.log("User not found for ID:", userId);
       return res.status(404).json({ message: "User not found" });
     }
 
@@ -52,6 +49,7 @@ export const getFeedPosts = async (req, res) => {
     following.push(userId); // Include user's own posts
 
     const posts = await Post.find({ userId: { $in: following } })
+      .populate("userId", "firstName lastName picturePath")
       .populate({
         path: 'comments',
         populate: {
@@ -61,7 +59,6 @@ export const getFeedPosts = async (req, res) => {
       })
       .sort({ createdAt: -1 });
 
-      console.log(`Fetched ${posts.length} posts for user ${userId}`);
     res.status(200).json(posts);
   } catch (err) {
     res.status(404).json({ message: err.message });
@@ -71,10 +68,32 @@ export const getFeedPosts = async (req, res) => {
 export const getUserPosts = async (req, res) => {
   try {
     const { userId } = req.params;
-    const post = await Post.find({ userId });
-    res.status(200).json(post);
+    const posts = await Post.find({ userId })
+      .populate("userId", "firstName lastName picturePath")
+      .sort({ createdAt: -1 });
+    res.status(200).json(posts);
   } catch (err) {
     res.status(404).json({ message: err.message });
+  }
+};
+
+// DELETE
+export const deletePost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedPost = await Post.findByIdAndDelete(id);
+    if (!deletedPost) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+    if (post.userId.toString() !== userId) {
+      return res.status(403).json({ message: "You don't have permission to delete this post" });
+    }
+
+    await Post.findByIdAndDelete(id);
+
+    res.status(200).json({ deletedPostId: id });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 

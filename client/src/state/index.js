@@ -29,12 +29,16 @@ export const authSlice = createSlice({
         setPosts: (state, action) => {
             state.posts = action.payload.posts;
         },
-        setPost: (state, action) => {
+        setPost: (state, action) => {if (action.payload.post === null) {
+            // This is a delete operation
+            state.posts = state.posts.filter((post) => post._id !== action.payload.postId);
+          } else {
             const updatedPosts = state.posts.map((post) => {
-                if (post._id === action.payload.post._id) return action.payload.post;
-                return post;
+              if (post._id === action.payload.post._id) return action.payload.post;
+              return post;
             });
             state.posts = updatedPosts;
+          }
         },
         setFollowers: (state, action) => {
             if (state.user) {

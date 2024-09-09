@@ -18,7 +18,8 @@ const reactionSchema = mongoose.Schema({
 const postSchema = mongoose.Schema(
   {
     userId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
       required: true,
     },
     firstName: {

@@ -13,7 +13,6 @@ const PostsWidget = ({ userId, isProfile = false }) => {
 
   const getPosts = async () => {
     try{
-      console.log("Fetching posts with token:", token);
       const response = await fetch("http://localhost:3001/posts", {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
@@ -25,7 +24,6 @@ const PostsWidget = ({ userId, isProfile = false }) => {
       dispatch(setPosts({ posts: data }));
     } catch (error) {
       console.error("Error fetching posts:", error);
-      setError("Failed to fetch posts. Please Try again later.");
     }
 };
 
@@ -49,8 +47,6 @@ const PostsWidget = ({ userId, isProfile = false }) => {
       getPosts();
     }
   }, [userId, isProfile]);
-
-  console.log("Current posts state:", posts);
 
   if (error) {
     return <div>{error}</div>;

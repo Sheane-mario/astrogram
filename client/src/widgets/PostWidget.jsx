@@ -14,9 +14,10 @@ import {
   import { Box, Divider, IconButton, Typography, useTheme, Tooltip, Popover, TextField, Button, Avatar, CircularProgress } from "@mui/material";
   import FlexBetween from "components/FlexBetween";
   import WidgetWrapper from "components/WidgetWrapper";
+  import UserImage from "components/UserImage";
   import { useState } from "react";
   import { useDispatch, useSelector } from "react-redux";
-  import { setPost } from "state";
+  import { setPost, setPosts } from "state";
   import { motion } from "framer-motion";
 
   const reactionIcons = {
@@ -44,6 +45,7 @@ import {
     const dispatch = useDispatch();
     const token = useSelector((state) => state.token);
     const loggedInUserId = useSelector((state) => state.user._id);
+    const isPostCreator = postUserId === loggedInUserId;
 
     const [isReactionsVisible, setIsReactionsVisible] = useState(false);
     const userReaction = Array.isArray(reactions) ? reactions.find(reaction => reaction.userId === loggedInUserId) : null;
@@ -57,6 +59,7 @@ import {
     const { palette } = useTheme();
     const main = palette.neutral.main;
     const primary = palette.primary.main;
+    const medium = palette.neutral.medium;
 
     const list = {
       visible: {
@@ -211,10 +214,57 @@ import {
         console.error("Error editing comment:", error.message);
       }
     };
-  
+
+    const deletePost = async () => {
+      if (!isPostCreator) {
+        console.error("You don't have permission to delete this post");
+        return;
+      }
+      
+      const response = await fetch(`http://localhost:3001/posts/${postId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      
+      if (response.ok) {
+        const { deletedPostId } = await response.json();
+        dispatch(setPost({ post: null, postId: deletedPostId }));
+      } else {
+        console.error("Failed to delete post");
+      }
+    };
   
     return (
       <WidgetWrapper m="2rem 0">
+        <FlexBetween>
+          <FlexBetween gap="1rem">
+            <UserImage image={userPicturePath} size="55px" />
+            <Box>
+              <Typography
+                variant="h4"
+                color={main}
+                fontWeight="500"
+                sx={{
+                  "&:hover": {
+                    color: palette.primary.light,
+                    cursor: "pointer",
+                  },
+                }}
+              >
+                {name}
+              </Typography>
+              <Typography color={medium} fontSize="0.75rem">
+                {location}
+              </Typography>
+            </Box>
+          </FlexBetween>
+          {isPostCreator && (
+            <IconButton onClick={deletePost}>
+              <DeleteOutlined />
+            </IconButton>
+          )}
+        </FlexBetween>
+
         <Typography color={main} sx={{ mt: "1rem" }}>
           {description}
         </Typography>
@@ -324,6 +374,11 @@ import {
             <Typography>{comments?.length || 0}</Typography>
           </FlexBetween>
         </FlexBetween>
+        {isPostCreator && (
+          <IconButton onClick={deletePost}>
+            <DeleteOutlined />
+          </IconButton>
+        )}
   
         <IconButton>
           <ShareOutlined />

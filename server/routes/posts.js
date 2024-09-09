@@ -1,23 +1,16 @@
 // server/routes/posts.js
 
 import express from "express";
-import { createPost, getFeedPosts, getUserPosts, addOrUpdateReaction, getAllReactions, deleteReaction , addComment, getComments,deleteComment, editComment } from "../controllers/posts.js";
+import { createPost, getFeedPosts, getUserPosts, deletePost, addOrUpdateReaction, getAllReactions, deleteReaction , addComment, getComments, deleteComment, editComment } from "../controllers/posts.js";
 import { verifyToken } from "../middleware/auth.js";
 
 const router = express.Router();
 
-/* logs */
-router.get("/", (req, res, next) => {
-    console.log("Attempting to get feed posts");
-    getFeedPosts(req, res, next);
-  });
-
-/* CREATE */
+/* POSTS */
 router.post('/', verifyToken, createPost);
-
-/* READ */
 router.get("/", verifyToken, getFeedPosts);
 router.get("/:userId/posts", verifyToken, getUserPosts);
+router.delete("/:id", verifyToken, deletePost);
 
 /* REACTIONS */
 router.patch("/:id/reaction", verifyToken, addOrUpdateReaction);

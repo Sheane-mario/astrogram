@@ -1,16 +1,16 @@
 // client/src/scenes/eventsPage/index.jsx
 
 import React, { useEffect, useState } from "react";
-import { Box, Button, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Button, useMediaQuery, useTheme, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Navbar from "scenes/navbar";
 import EventWidget from "widgets/EventWidget";
 import UserWidget from "widgets/UserWidget";
-import FlexBetween from "components/FlexBetween";
 
 const EventsPage = () => {
-  const [events, setEvents] = useState([]);
+  const [attendingEvents, setAttendingEvents] = useState([]);
+  const [availableEvents, setAvailableEvents] = useState([]);
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
   const { _id, picturePath } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
@@ -23,7 +23,8 @@ const EventsPage = () => {
       headers: { Authorization: `Bearer ${token}` },
     });
     const data = await response.json();
-    setEvents(data);
+    setAttendingEvents(data.attendingEvents);
+    setAvailableEvents(data.availableEvents);
   };
 
   useEffect(() => {
@@ -41,9 +42,7 @@ const EventsPage = () => {
         justifyContent="space-between"
       >
         <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
-          <Box position="fixed">
-            <UserWidget userId={_id} picturePath={picturePath} />
-          </Box>
+          <UserWidget userId={_id} picturePath={picturePath} />
         </Box>
         <Box
           flexBasis={isNonMobileScreens ? "42%" : undefined}
@@ -62,7 +61,9 @@ const EventsPage = () => {
           >
             Create New Event
           </Button>
-          {events.map((event) => (
+          
+          <Typography variant="h5" sx={{ mb: "1.5rem" }}>Events You're Attending</Typography>
+          {attendingEvents.map((event) => (
             <EventWidget
               key={event._id}
               eventId={event._id}
@@ -74,6 +75,24 @@ const EventsPage = () => {
               date={event.date}
               location={event.location}
               attendees={event.attendees || []}
+              isAttending={true}
+            />
+          ))}
+          
+          <Typography variant="h5" sx={{ mt: "3rem", mb: "1.5rem" }}>Available Events</Typography>
+          {availableEvents.map((event) => (
+            <EventWidget
+              key={event._id}
+              eventId={event._id}
+              creatorId={event.creatorId?._id}
+              creatorName={`${event.creatorId?.firstName || ''} ${event.creatorId?.lastName || ''}`}
+              creatorPicturePath={event.creatorId?.picturePath}
+              title={event.title}
+              description={event.description}
+              date={event.date}
+              location={event.location}
+              attendees={event.attendees || []}
+              isAttending={false}
             />
           ))}
         </Box>
