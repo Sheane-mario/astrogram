@@ -1,5 +1,7 @@
+// server/controllers/search.js
+
 import User from "../models/User.js";
-//import Event from "../models/Event.js";
+// import Event from "../models/Event.js";
 
 export const searchAll = async (req, res) => {
   try {
@@ -23,7 +25,7 @@ export const searchAll = async (req, res) => {
 
     res.json({
       users,
-      //events
+      // events
     });
   } catch (error) {
     res.status(500).json({ message: error.message });

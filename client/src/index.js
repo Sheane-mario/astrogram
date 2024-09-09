@@ -1,3 +1,5 @@
+// client/src/index.js
+
 import React, { version } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';

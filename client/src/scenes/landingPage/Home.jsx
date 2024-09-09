@@ -1,3 +1,5 @@
+// client/src/scenes/landingPage/Home.jsx
+
 import React from "react";
 import { Box, Typography, Button, useTheme, useMediaQuery } from "@mui/material";
 import { useNavigate } from "react-router-dom";

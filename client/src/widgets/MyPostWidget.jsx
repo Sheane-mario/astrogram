@@ -1,3 +1,5 @@
+// client/src/widgets/MyPostWidget.jsx
+
 import {
     EditOutlined,
     DeleteOutlined,
@@ -45,17 +47,25 @@ import {
         formData.append("picture", image);
         formData.append("picturePath", image.name);
       }
-  
+    try {
       const response = await fetch('http://localhost:3001/posts', {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const posts = await response.json();
       dispatch(setPosts({ posts }));
       setImage(null);
       setPost("");
-    };
+    } catch (error) {
+      console.error("Error creating post:", error);
+    }
+  };
   
     return (
       <WidgetWrapper>

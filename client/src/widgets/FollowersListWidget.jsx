@@ -1,3 +1,5 @@
+// client/src/widgets/FollowersListWidget.jsx
+
 import { Box, Typography, useTheme } from "@mui/material";
 import Follower from "components/Follower";
 import WidgetWrapper from "components/WidgetWrapper";

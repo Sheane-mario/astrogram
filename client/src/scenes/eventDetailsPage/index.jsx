@@ -1,3 +1,5 @@
+// client/src/scenes/eventDetailsPage/index.jsx
+
 import React, { useEffect, useState } from "react";
 import { Box, Typography, Button, useTheme } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";

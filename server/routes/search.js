@@ -1,3 +1,5 @@
+// server/routes/search.js
+
 import express from "express";
 import { searchAll } from "../controllers/search.js";
 import { verifyToken } from "../middleware/auth.js";

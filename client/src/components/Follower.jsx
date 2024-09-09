@@ -1,3 +1,5 @@
+// client/src/components/Follower.jsx
+
 import { PersonAddOutlined, PersonRemoveOutlined } from "@mui/icons-material";
 import { Box, Typography, IconButton, useTheme } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";

@@ -1,3 +1,5 @@
+// server/controllers/auth.js
+
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';

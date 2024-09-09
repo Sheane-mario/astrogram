@@ -1,3 +1,5 @@
+// server/models/Post.js
+
 import mongoose from "mongoose";
 
 const reactionSchema = mongoose.Schema({

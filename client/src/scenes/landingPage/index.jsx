@@ -1,3 +1,5 @@
+// client/src/scenes/landingPage/index.jsx
+
 import React from 'react';
 import Navbar from './Navbar';
 import Home from './Home';

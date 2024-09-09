@@ -1,3 +1,5 @@
+// client/src/components/WidgetWrapper.jsx
+
 import { Box } from "@mui/material";
 import { styled } from "@mui/system";
 

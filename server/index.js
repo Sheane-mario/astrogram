@@ -14,6 +14,8 @@ import postRoutes from './routes/posts.js';
 import searchRoutes from './routes/search.js';
 import eventRoutes from './routes/events.js';
 import { register } from './controllers/auth.js';
+import { createPost } from './controllers/posts.js';
+import { verifyToken } from './middleware/auth.js';
 import User from './models/User.js';
 import Post from './models/Post.js';
 import Comment from './models/Comment.js'
@@ -45,13 +47,20 @@ const storage = multer.diskStorage({
 })
 const upload = multer({ storage });
 
+/* log */
+app.use((req, res, next) => {
+    console.log(`Received ${req.method} request for ${req.url}`);
+    next();
+  });
+
 /* ROUTES WITH FILES */
 app.post('/auth/register', upload.single('picture'), register);
+app.post('/posts', verifyToken, upload.single('picture'), createPost);
 
 /* ROUTES */ 
 app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
-app.use("/posts", postRoutes);
+app.use("/posts", verifyToken, postRoutes);
 app.use("/search", searchRoutes);
 app.use("/events", eventRoutes);
 

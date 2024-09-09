@@ -1,3 +1,5 @@
+// client/src/scenes/navbar/index.jsx
+
 import React, { useState } from "react";
 import { Box, IconButton, InputBase, Typography, Select, MenuItem, FormControl, useTheme, useMediaQuery } from "@mui/material";
 import { Search, Message, DarkMode, LightMode, Help, Menu, Close } from "@mui/icons-material";

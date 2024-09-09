@@ -1,3 +1,5 @@
+// server/controllers/posts.js
+
 import Post from "../models/Post.js";
 import User from "../models/User.js";
 import Comment from "../models/Comment.js";
@@ -6,23 +8,29 @@ import Comment from "../models/Comment.js";
 export const createPost = async (req, res) => {
   try {
     const { userId, description, picturePath } = req.body;
+
     const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
     const newPost = new Post({
       userId,
       firstName: user.firstName,
       lastName: user.lastName,
       location: user.location,
       description,
-      userPicturePath: user.picturePath,
       picturePath,
+      userPicturePath: user.picturePath,
       reactions: [],
       comments: [],
     });
+
     await newPost.save();
 
-    const post = await Post.find();
-    res.status(201).json(post);
+    const posts = await Post.find().sort({ createdAt: -1 });
+    res.status(201).json(posts);
   } catch (err) {
+    console.error("Error in createPost:", err);
     res.status(409).json({ message: err.message });
   }
 };
@@ -30,15 +38,31 @@ export const createPost = async (req, res) => {
 /* READ */
 export const getFeedPosts = async (req, res) => {
   try {
-    const post = await Post.find()
-    .populate({
-      path: 'comments',
-      populate: {
-        path: 'userId',
-        select: 'firstName lastName _id'
-      }
-    });
-    res.status(200).json(post);
+    console.log("getFeedPosts called");
+    const userId = req.user.id;
+    console.log("User ID from token:", userId);
+
+    const user = await User.findById(userId);
+    if (!user) {
+      console.log("User not found for ID:", userId);
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const following = user.following;
+    following.push(userId); // Include user's own posts
+
+    const posts = await Post.find({ userId: { $in: following } })
+      .populate({
+        path: 'comments',
+        populate: {
+          path: 'userId',
+          select: 'firstName lastName _id'
+        }
+      })
+      .sort({ createdAt: -1 });
+
+      console.log(`Fetched ${posts.length} posts for user ${userId}`);
+    res.status(200).json(posts);
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
