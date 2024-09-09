@@ -46,12 +46,6 @@ const Navbar = () => {
                     Astrogram
                 </Typography>
                 {isNonMobileScreens && (
-                    // <FlexBetween backgroundColor={neutralLight} borderRadius='9px' gap='3rem' padding='0.1rem 1.5rem'>
-                    //     <InputBase placeholder="Search..."/>
-                    //     <IconButton>
-                    //         <Search />
-                    //     </IconButton>
-                    // </FlexBetween>
                     <SearchBar />
                 )}
             </FlexBetween>
@@ -62,12 +56,12 @@ const Navbar = () => {
                     <IconButton onClick={() => dispatch(setMode())}>
                         {theme.palette.mode === 'dark' ? (<DarkMode sx={{ fontSize: '25px' }}/>) : (<LightMode sx={{ fontSize: '25px' }}/>)}
                     </IconButton>
-                    <Message sx={{ fontSize: '25px' }}/>
-                    <Notifications sx={{ fontSize: '25px' }}/>
+                    {/* <Message sx={{ fontSize: '25px' }}/> */}
+                    {/* <Notifications sx={{ fontSize: '25px' }}/> */}
                     <IconButton onClick={() => navigate("/events")}>
                         <EventIcon sx={{ fontSize: '25px' }}/>
                     </IconButton>
-                    <Help sx={{ fontSize: '25px' }}/>
+                    {/* <Help sx={{ fontSize: '25px' }}/> */}
                     <FormControl variant="standard" value={fullName} >
                         <Select value={fullName}
                             sx={{

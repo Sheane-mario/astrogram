@@ -18,6 +18,8 @@ import {
   import { useDispatch, useSelector } from "react-redux";
   import { setPost } from "state";
   import { motion } from "framer-motion";
+  import UserImage from 'components/UserImage';
+  import { useNavigate } from 'react-router-dom';
 
   const reactionIcons = {
     like: FavoriteBorderOutlined,
@@ -52,6 +54,7 @@ import {
     const [anchorEl, setAnchorEl] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [reactionUsers, setReactionUsers] = useState([]);
+    const navigate = useNavigate();
 
 
     const { palette } = useTheme();
@@ -215,6 +218,28 @@ import {
   
     return (
       <WidgetWrapper m="2rem 0">
+        <FlexBetween gap="1rem">
+          <FlexBetween>
+          <UserImage image={userPicturePath} size="55px" />
+          <Box p='0.5rem'></Box>
+          <Box>
+            <Typography
+              color={main}
+              variant="h5"
+              fontWeight="500"
+              sx={{
+                "&:hover": {
+                  color: palette.primary.light,
+                  cursor: "pointer",
+                },
+              }}
+              onClick={() => navigate(`/profile/${postUserId}`)}
+            >
+              {name || "Unknown Creator"}
+            </Typography>
+          </Box>
+          </FlexBetween>
+        </FlexBetween>
         <Typography color={main} sx={{ mt: "1rem" }}>
           {description}
         </Typography>
