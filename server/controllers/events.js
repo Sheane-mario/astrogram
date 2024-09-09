@@ -124,8 +124,15 @@ export const getUserEvents = async (req, res) => {
 
 export const getAllEvents = async (req, res) => {
   try {
-    const events = await Event.find().sort({ date: 1 }).populate("creatorId", "firstName lastName");
-    res.status(200).json(events);
+    const userId = req.user.id;
+    const events = await Event.find()
+      .sort({ date: 1 })
+      .populate("creatorId", "firstName lastName picturePath");
+
+    const attendingEvents = events.filter(event => event.attendees.includes(userId));
+    const availableEvents = events.filter(event => !event.attendees.includes(userId));
+
+    res.status(200).json({ attendingEvents, availableEvents });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

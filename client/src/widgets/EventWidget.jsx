@@ -7,7 +7,7 @@ import FlexBetween from "components/FlexBetween";
 import UserImage from "components/UserImage";
 import WidgetWrapper from "components/WidgetWrapper";
 
-const EventWidget = ({ eventId, creatorId, creatorName, creatorPicturePath, title, description, date, location, attendees }) => {
+const EventWidget = ({ eventId, creatorId, creatorName, creatorPicturePath, title, description, date, location, attendees, isAttending }) => {
   const { palette } = useTheme();
   const navigate = useNavigate();
   const main = palette.neutral.main;
@@ -17,7 +17,7 @@ const EventWidget = ({ eventId, creatorId, creatorName, creatorPicturePath, titl
     <WidgetWrapper m="2rem 0">
       <FlexBetween>
         <FlexBetween gap="1rem">
-          <UserImage image={creatorPicturePath || "default_avatar.png"} size="55px" />
+          <UserImage image={creatorPicturePath} size="55px" />
           <Box>
             <Typography
               color={main}
@@ -59,13 +59,13 @@ const EventWidget = ({ eventId, creatorId, creatorName, creatorPicturePath, titl
         sx={{
           m: "0.5rem 0",
           p: "1rem",
-          backgroundColor: palette.primary.main,
+          backgroundColor: isAttending ? palette.primary.light : palette.primary.main,
           color: palette.background.alt,
           "&:hover": { color: palette.primary.main },
         }}
         onClick={() => navigate(`/events/${eventId}`)}
       >
-        View Event
+        {isAttending ? "View Event Details" : "View Event"}
       </Button>
     </WidgetWrapper>
   );
